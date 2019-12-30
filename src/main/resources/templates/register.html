@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<title>注册</title>
+		<!-- Bootstrap core CSS -->
+		<link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+		<!-- Custom styles for this template -->
+		<link href="asserts/css/signin.css"  th:href="@{/styles/sign.css}" rel="stylesheet">
+		<!--jquery-->
+		<script th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+
+		<!--ajax确定用户名不重复 密码是3-6位数字-->
+		<script th:inline="javascript">
+			var uniqueName = false
+			var passVerify = false
+			$(function (){
+				$("#userName").blur(function () {
+					var userName = $(this).val()
+					var url = /*[[@{/checkUserName}]]*/
+					$.post(url,{"userName":userName},function (data) {
+						var info = ""
+						if(data){
+							info = "用户名已存在"
+							uniqueName = false
+						}
+						else {
+							info = "可以使用"
+							uniqueName = true
+						}
+						$("#userInfo").html(info)
+					})
+				})
+
+			/*密码必须是1-6位数字字母*/
+			$(":password:eq(0)").blur(function () {
+				if(!$(this).val().match(/^\d{1,6}$/)){
+					$("#passwordInfo").css("color","red").html("请输入1-6位数字")
+					passVeri = false
+				}else{
+					$("#passwordInfo").html("√")
+					passVeri = true
+				}
+			})
+
+			/*当满足所有条件时才能提交*/
+			$(":submit:eq(0)").click(function(e){
+				if(!uniqueName || !passVeri ){
+					e.preventDefault()
+					alert("请填写正确信息")
+				}
+			})
+		})
+		</script>
+
+	</head>
+
+	<body class="text-center">
+		<form class="form-signin" action="dashboard.html" th:action="@{/register}" method="post">
+			<img class="mb-4" src="asserts/img/bootstrap-solid.svg" th:src="@{/images/img/bootstrap-solid.svg}" alt="" width="72" height="72">
+			<h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}">Please register</h1>
+			<p style="color: red" th:text="${registerMessage}" th:if="${not #strings.isEmpty(registerMessage)}"></p>
+			<label class="sr-only">Username</label>
+			<input id="userName" type="text" name="username" class="form-control" placeholder="Username" required="" autofocus=""  th:placeholder="#{login.username}"><span id="userInfo"></span><br>
+			<label class="sr-only">Password</label>
+			<input type="password" name="password" class="form-control" placeholder="Password" required="" th:placeholder="#{login.password}"><span id="passwordInfo"></span><br>
+			<input type="hidden" name="next" th:value="${next}">
+			<div class="checkbox mb-3">
+				<label>
+        </label>
+			</div>
+			<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{login.register}">Register</button>
+			<p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+			<a class="btn btn-sm" th:href="@{/login.html(locale='zh_CN')}">中文</a>
+			<a class="btn btn-sm"  th:href="@{/login.html(locale='en_US')}">English</a>
+		</form>
+	</body>
+
+</html>
