@@ -13,5 +13,4 @@ public class SpringbootsnsApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringbootsnsApplication.class, args);
     }
-
 }
