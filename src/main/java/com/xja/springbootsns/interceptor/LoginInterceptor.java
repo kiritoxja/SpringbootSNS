@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ *如果用户没有登录  则跳转登录页 并在url记录要访问的页面
  **/
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
@@ -22,7 +22,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         if(loginUser.getUser() == null ){
             //未登录 跳转登录并带上之前要访问的路径
-            httpServletResponse.sendRedirect("/relogin?next="+httpServletRequest.getRequestURI());
+            httpServletResponse.sendRedirect("/reglogin?next="+httpServletRequest.getRequestURI());
         }
         return true;
     }

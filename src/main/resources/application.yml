@@ -4,7 +4,7 @@ spring:
     username: root
     password: 199661
     url: jdbc:mysql://localhost:3306/sns?serverTimezone=UTC
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     #druid数据源配置
     druid:
@@ -48,6 +48,9 @@ spring:
         login-password: root
   messages:
     basename: normalize.login
+  thymeleaf:
+    cache=false:
+
 
 mybatis:
   #指定mapper.xml位置
@@ -61,4 +64,8 @@ mybatis:
 # 打印sql
 logging:
   level:
-    com.xja.springbootsns.dao: debug
+    root: error
+#    com.xja.springbootsns.dao: debug
+#  file:
+#    name: my.log
+

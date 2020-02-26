@@ -1,9 +1,7 @@
 package com.xja.springbootsns.dao;
 
 import com.xja.springbootsns.model.Question;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -20,4 +18,10 @@ public interface QuestionDao {
 
     List<Question> selectLatestQuestions(@Param("userId") int userId, @Param("offset") int offset,
                                          @Param("limit") int limit);
+
+    @Select(value = {"select", SELECT_FIELDS, " from ", TABLE_NAME, "where id = #{id}"})
+    Question selectQuestionById(int id);
+
+    @Update(value = {"update ", TABLE_NAME, " set comment_count=#{commentCount} where id=#{id}"})
+    void updateCommentCount(int commentCount, int id);
 }

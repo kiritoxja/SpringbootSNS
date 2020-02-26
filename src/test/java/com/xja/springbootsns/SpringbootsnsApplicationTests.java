@@ -14,5 +14,6 @@ class SpringbootsnsApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 }

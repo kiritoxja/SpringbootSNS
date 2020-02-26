@@ -29,11 +29,12 @@ CREATE TABLE `question` (
 
 CREATE TABLE `message` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `fromid` INT UNSIGNED NOT NULL,
-    `toid` INT UNSIGNED NOT NULL,
+    `from_id` INT UNSIGNED NOT NULL,
+    `to_id` INT UNSIGNED NOT NULL,
     `content` TEXT NULL,
-    `conversation_id` INT NOT NULL,
+    `conversation_id` VARCHAR(255) NOT NULL,
     `created_date` DATETIME NOT NULL,
+    `has_read` INT DEFAULT 0 NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`fromid`) REFERENCES user(`id`),
     FOREIGN KEY (`toid`) REFERENCES user(`id`),
@@ -47,7 +48,8 @@ CREATE TABLE `comment` (
     `user_id` INT UNSIGNED NOT NULL,
     `created_date` DATETIME NOT NULL,
     `entity_id` INT NOT NULL,
-    `entity_type` varchar(15) NOT NULL,
+    `entity_type` INT NOT NULL,
+    `status` INT DEFAULT 0,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES user(`id`),
     INDEX `date_index` (`created_date` ASC)

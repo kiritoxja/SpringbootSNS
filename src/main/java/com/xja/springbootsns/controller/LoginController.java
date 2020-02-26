@@ -20,7 +20,7 @@ import java.util.TreeMap;
 
 
 /**
- *
+ *登录 注册控制器
  **/
 @Controller
 public class LoginController {
@@ -35,15 +35,18 @@ public class LoginController {
     LoginUser loginUser;
 
     @PostMapping(value = "/login")
-    public String login(String username, String password,String remember, @RequestParam(value = "next", required = false) String next, Model model, HttpServletResponse response) {
+    public String login(String username, String password,String remember,
+                        @RequestParam(value = "next", required = false) String next, Model model, HttpServletResponse response) {
         try {
             Map<String,Object> resultMap = userServiceImpl.login(username, password);
             if(resultMap.containsKey("token")) {
                 //登录成功 发送JWT票据 记住登录状态
                 String token = (String) resultMap.get("token");
                 Cookie cookie = new Cookie("token", token);
-                cookie.setMaxAge(1);
-                //如果选了remember 就长时间保存  否则应该视为session cookie 但chrome有bug 就保存1s
+                cookie.setPath("/");
+                //如果选了remember 就长时间保存  否则应该视为session cookie
+                // 但chrome有bug 没有setMaxAge还是会长时间保存 就保存1s cookie.setMaxAge(1); 但这样会让后续无法判断是否登录了 还是放弃了
+                // 后来又发现chrome修好了 不setMaxAge 关了浏览器后cookie会自动销毁了
                 if(!StringUtils.isEmpty(remember)) {
                     cookie.setMaxAge(tokenSavedTime);
                 }
@@ -65,7 +68,8 @@ public class LoginController {
         }
     }
 
-    @RequestMapping("/relogin")
+    //未登录用户跳转注册登录页 并记录之前要访问的页面
+    @RequestMapping("/reglogin")
     public String relogin( @RequestParam(value = "next", required = false) String next , Model model){
         model.addAttribute("next", next);
         return "login";
@@ -74,6 +78,7 @@ public class LoginController {
     @PostMapping(value = {"/register"})
     public String register(String username, String password,  @RequestParam(value = "next", required = false) String next,Model model, HttpServletResponse response){
         try {
+            //注册用户 并返回token
             String token = userServiceImpl.register(username, password).get("token").toString();
             Cookie cookie = new Cookie("token", token);
             cookie.setMaxAge(tokenSavedTime);

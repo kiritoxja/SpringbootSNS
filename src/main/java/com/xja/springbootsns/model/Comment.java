@@ -1,6 +1,8 @@
 package com.xja.springbootsns.model;
 
 
+import java.util.Date;
+
 public class Comment {
 
   private int id;
@@ -8,7 +10,8 @@ public class Comment {
   private int userId;
   private java.util.Date createdDate;
   private int entityId;
-  private String entityType;
+  private int entityType;
+  private int status;
 
 
   public int getId() {
@@ -56,12 +59,31 @@ public class Comment {
   }
 
 
-  public String getEntityType() {
+  public int getEntityType() {
     return entityType;
   }
 
-  public void setEntityType(String entityType) {
+  public void setEntityType(int entityType) {
     this.entityType = entityType;
   }
 
+  public int getStatus() {
+    return status;
+  }
+
+  public void setStatus(int status) {
+    this.status = status;
+  }
+
+  public Comment() {
+  }
+
+  public Comment(String content, int userId, Date createdDate, int entityId, int entityType, int status) {
+    this.content = content;
+    this.userId = userId;
+    this.createdDate = createdDate;
+    this.entityId = entityId;
+    this.entityType = entityType;
+    this.status = status;
+  }
 }

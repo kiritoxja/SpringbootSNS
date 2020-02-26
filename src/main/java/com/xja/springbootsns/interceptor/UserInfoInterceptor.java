@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 /**
- *
+ *用户信息拦截器  用于检查是否带有token 如果带有则记录用户信息 并刷新token
+ * 并在返回视图前添加用户信息  方便视图获取   最后清除用户信息
  **/
 @Component
 public class UserInfoInterceptor implements HandlerInterceptor {
@@ -55,7 +56,7 @@ public class UserInfoInterceptor implements HandlerInterceptor {
                    cookie.setHttpOnly(true);
                    response.addCookie(cookie);
                }
-               loginUser.setUsers(user);
+               loginUser.setUser(user);
            }
        }
        return true;
@@ -65,7 +66,7 @@ public class UserInfoInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         //为了让视图直接获取登录用户的信息 直接放入model  确保不是那种checkusername 没有返回视图的
        if(loginUser.getUser() != null && modelAndView != null){
-           modelAndView.addObject("user", loginUser.getUser());
+           modelAndView.addObject("loginUser", loginUser.getUser());
        }
     }
 

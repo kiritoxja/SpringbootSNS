@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.util.DigestUtils;
 
 import java.util.Date;
 import java.util.Random;
@@ -47,7 +48,9 @@ public class DaoTest {
             user.setSalt("");
             userDao.addUser(user);
 
-            user.setPassword("newpassword");
+            String password = "123";
+            DigestUtils.md5DigestAsHex((password + user.getSalt()).getBytes());
+            user.setPassword(password);
             userDao.updatePassword(user);
             Question question = new Question();
             question.setCommentCount(i);

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ *首页控制器
  **/
 
 @Controller
@@ -38,13 +38,13 @@ public class IndexController {
         }
         return viewObjects;
     }
-
     @RequestMapping(value = {"/","/index","/index.html"})
     public String index(Model model){
         model.addAttribute("vos", getQuestions(0, 0, 10));
         return "index";
     }
 
+    //查找某个用户发布的问题
     @RequestMapping("/user/{userId}")
     public String userIndex(Model model, @PathVariable("userId")int userId){
         model.addAttribute("vos", getQuestions(userId, 0, 10));

@@ -7,11 +7,13 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 public class LoginUser {
-    private static ThreadLocal<User> users = new ThreadLocal<>();
+    private static ThreadLocal<User> user = new ThreadLocal<>();
 
-    public User getUser(){return users.get();}
+    public User getUser(){return user.get();}
 
-    public void setUsers(User user){users.set(user);}
+    public void setUser(User user){
+        LoginUser.user.set(user);}
 
-    public void clearUsers(){users.remove();}
+    public void clearUsers(){
+        user.remove();}
 }

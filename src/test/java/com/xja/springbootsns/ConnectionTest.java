@@ -18,7 +18,7 @@ public class ConnectionTest {
 
 
     @Test
-    @Sql("/createTable.sql")
+    //@Sql("/createTable.sql")
     void testConnection(){
         System.out.println(dataSource);
     }
