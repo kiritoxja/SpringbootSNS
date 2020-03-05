@@ -41,4 +41,9 @@ public class CommentServiceImpl implements CommentService {
     public Comment getCommentById(int commentId) {
         return commentDao.selectById(commentId);
     }
+
+    @Override
+    public int getUserCommentCount(int userId) {
+        return commentDao.getUserCommentCount(userId);
+    }
 }

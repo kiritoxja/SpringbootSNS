@@ -38,4 +38,8 @@ public interface CommentDao {
     @Select(value = {"select count(id) from ", TABLE_NAME,
             " where entity_type=#{entityType} and entity_id=#{entityId}"})
     int getEntityCommentCount(int entityType, int entityId);
+
+    //获得用户的评论数
+    @Select(value = {"select count(id) from ", TABLE_NAME, " where user_id=#{userId}"})
+    int getUserCommentCount(int userId);
 }

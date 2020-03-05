@@ -1,11 +1,7 @@
 package com.xja.springbootsns.controller;
 
 import com.xja.springbootsns.model.*;
-import com.xja.springbootsns.service.Impl.LikeServiceImpl;
-import com.xja.springbootsns.service.serviceInterface.CommentService;
-import com.xja.springbootsns.service.serviceInterface.LikeService;
-import com.xja.springbootsns.service.serviceInterface.QuestionService;
-import com.xja.springbootsns.service.serviceInterface.UserService;
+import com.xja.springbootsns.service.serviceInterface.*;
 import com.xja.springbootsns.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +37,9 @@ public class QuestionController {
 
     @Autowired
     LikeService likeServiceImpl;
+
+    @Autowired
+    FollowService followServiceImpl;
 
     //发布一个问题
     @PostMapping("/question/add")
@@ -87,6 +86,26 @@ public class QuestionController {
             comments.add(viewObject);
         }
         model.addAttribute("comments", comments);
+        // 获取关注的用户信息
+        List<ViewObject> followUsers = new ArrayList<>();
+        List<Integer> users = followServiceImpl.getFollowers(EntityType.ENTITY_QUESTION, qid, 20);
+        for (Integer userId : users) {
+            ViewObject vo = new ViewObject();
+            User u = userServiceImpl.getUserById(userId);
+            if (u == null) {
+                continue;
+            }
+            vo.put("name", u.getName());
+            vo.put("headUrl", u.getHeadUrl());
+            vo.put("id", u.getId());
+            followUsers.add(vo);
+        }
+        model.addAttribute("followUsers", followUsers);
+        if (loginUser.getUser() != null) {
+            model.addAttribute("followed", followServiceImpl.isFollower(loginUser.getUser().getId(), EntityType.ENTITY_QUESTION, qid));
+        } else {
+            model.addAttribute("followed", false);
+        }
         return "questionDetail";
     }
 }

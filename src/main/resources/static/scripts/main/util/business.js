@@ -29,6 +29,8 @@
                     oEl.removeClass('zg-btn-follow zg-btn-unfollow').addClass(bFollow ? 'zg-btn-follow' : 'zg-btn-unfollow');
                     // 文字
                     oEl.html(bFollow ? '关注' : '取消关注');
+                    // 修改粉丝数量
+                    $('.js-user-count').html(oResult.msg+'粉丝');
                 },
                 error: function (oResult) {
                     alert('出现错误，请重试');

@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Transaction;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * jedis 接口 封装pool
@@ -29,6 +32,10 @@ public class JedisAdapter implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         pool = new JedisPool(new GenericObjectPoolConfig(),host,port,timeout,password,defaultDatabaseIndex);
+    }
+
+    public Jedis getJedis() {
+        return pool.getResource();
     }
 
     //set API
@@ -93,4 +100,68 @@ public class JedisAdapter implements InitializingBean {
         }
         return null;
     }
+
+    //zset api
+    public Set<String> zrevrange(String key, int start, int end) {
+        try (Jedis jedis = pool.getResource()){
+            return jedis.zrevrange(key, start, end);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("发生异常" + e.getMessage());
+        }
+        return null;
+    }
+
+    //元素个数
+    public long zcard(String key) {
+        try (Jedis jedis = pool.getResource()){
+            return jedis.zcard(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("发生异常" + e.getMessage());
+        }
+        return 0;
+    }
+
+    //元素的score
+    public Double zscore(String key, String member) {
+        try (Jedis jedis = pool.getResource()){
+            return jedis.zscore(key, member);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("发生异常" + e.getMessage());
+        }
+        return null;
+    }
+
+
+    //事务
+    public Transaction multi(Jedis jedis) {
+        try {
+            return jedis.multi();
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+        } finally {
+        }
+        return null;
+    }
+
+    //每一个object 表示操作的返回值
+    public List<Object> exec(Transaction tx, Jedis jedis) {
+        try {
+            return tx.exec();
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+            tx.discard();
+        } finally {
+            if (tx != null) {
+                tx.close();
+            }
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
 }
