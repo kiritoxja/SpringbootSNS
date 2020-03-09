@@ -4,14 +4,11 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Transaction;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -90,6 +87,17 @@ public class JedisAdapter implements InitializingBean {
         return 0;
     }
 
+    public List<String> lrange(String key, int start, int stop){
+        try (Jedis jedis = pool.getResource()){
+            return jedis.lrange(key, start, stop);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("发生异常" + e.getMessage());
+        }
+        return null;
+    }
+
+
     //移出并获取列表的最后一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。返回所属的key和value
     public List<String> brpop(int timeout, String key){
         try (Jedis jedis = pool.getResource()){
@@ -127,6 +135,47 @@ public class JedisAdapter implements InitializingBean {
     public Double zscore(String key, String member) {
         try (Jedis jedis = pool.getResource()){
             return jedis.zscore(key, member);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("发生异常" + e.getMessage());
+        }
+        return null;
+    }
+
+    public Long zadd(String key, double score, String value) {
+        try (Jedis jedis = pool.getResource()){
+            return jedis.zadd(key,score,value);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("发生异常" + e.getMessage());
+        }
+        return null;
+    }
+
+    public Long zrem(String key, String... members) {
+        try (Jedis jedis = pool.getResource()){
+            return jedis.zrem(key,members);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("发生异常" + e.getMessage());
+        }
+        return null;
+    }
+
+    //求集合交集
+    public Long zinterstore(String dstkey, String... sets) {
+        try (Jedis jedis = pool.getResource()){
+            return jedis.zinterstore(dstkey,sets);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("发生异常" + e.getMessage());
+        }
+        return null;
+    }
+
+    public Long zunionstore(String dstkey, String... sets) {
+        try (Jedis jedis = pool.getResource()){
+            return jedis.zunionstore(dstkey,sets);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("发生异常" + e.getMessage());

@@ -65,10 +65,10 @@ public class FollowController {
             return JsonUtil.getJsonString(999);
         }
         boolean ret = followServiceImpl.unfollow(loginUser.getUser().getId(), EntityType.ENTITY_USER, userId);
-        // 取关不发送异步事件
-       /* eventProducer.fireEvent(new EventModel(EventType.UNFOLLOW)
+        // 取关发送异步事件
+        eventProducer.fireEvent(new EventModel(EventType.UNFOLLOW)
                 .setActorId(loginUser.getUser().getId()).setEntityId(userId)
-                .setEntityType(EntityType.ENTITY_USER).setEntityOwnerId(userId));*/
+                .setEntityType(EntityType.ENTITY_USER).setEntityOwnerId(userId));
         // 返回粉丝人数
         return JsonUtil.getJsonString(String.valueOf(
                 followServiceImpl.getFollowerCount(EntityType.ENTITY_USER, userId)),ret ? 0 : 1);

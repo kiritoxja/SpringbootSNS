@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS `comment`;
 DROP TABLE IF EXISTS `message`;
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `question`;
+ DROP TABLE IF EXISTS `feed`;
 
 
 CREATE TABLE user(
@@ -54,3 +55,14 @@ CREATE TABLE `comment` (
     FOREIGN KEY (`user_id`) REFERENCES user(`id`),
     INDEX `date_index` (`created_date` ASC)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `feed` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `created_date` DATETIME NULL,
+    `user_id` INT NULL,
+    `data` TINYTEXT NULL,
+    `type` INT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `user_index` (`user_id` ASC)
+)ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
