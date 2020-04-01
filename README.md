@@ -194,3 +194,37 @@ Future 等待任务执行完成 获得返回结果
 
 
 
+# 爬取
+
+使用pyspider爬取v2ex 产生问题的数据
+
+
+
+# 全文搜索
+
+启动solr
+
+配置中文分词器 ikanalyzer 添加jar包
+
+D:\software\solr-8.5.0\solr-8.5.0\server\solr-webapp\webapp\WEB-INF\lib
+
+建立两个字段的索引 title content
+
+那么添加一个document的时候会分别建立这两个索引（分词创建key）
+
+查询也是根据分词的key进行查找相应字段索引
+
+
+
+导入mysql数据
+
+cnblogs.com/david1216/p/11479495.html
+
+
+
+添加相应web功能
+
+查找索引出的问题并展示
+
+添加问题时通过异步事件添加索引
+

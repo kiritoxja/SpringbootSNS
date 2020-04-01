@@ -1,13 +1,11 @@
 package com.xja.springbootsns.service.Impl;
 
-import com.xja.springbootsns.controller.QuestionController;
 import com.xja.springbootsns.dao.QuestionDao;
 import com.xja.springbootsns.model.LoginUser;
 import com.xja.springbootsns.model.Question;
 import com.xja.springbootsns.model.User;
 import com.xja.springbootsns.service.serviceInterface.QuestionService;
 import com.xja.springbootsns.service.serviceInterface.SensitiveService;
-import com.xja.springbootsns.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +41,16 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public int addQuestion(Question question) {
+        String content = question.getContent();
+        String title = question.getTitle();
+        //xss过滤
+        content = HtmlUtils.htmlEscape(content);
+        title = HtmlUtils.htmlEscape(title);
+        //敏感词过滤
+        content = sensitiveServiceImpl.filter(content);
+        title = sensitiveServiceImpl.filter(title);
+        question.setContent(content);
+        question.setTitle(title);
         return questionDao.addQuestion(question);
     }
 

@@ -1,5 +1,8 @@
 package com.xja.springbootsns.controller;
 
+import com.xja.springbootsns.async.EventModel;
+import com.xja.springbootsns.async.EventProducer;
+import com.xja.springbootsns.async.EventType;
 import com.xja.springbootsns.model.*;
 import com.xja.springbootsns.service.serviceInterface.*;
 import com.xja.springbootsns.util.JsonUtil;
@@ -11,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,6 +45,9 @@ public class QuestionController {
     @Autowired
     FollowService followServiceImpl;
 
+    @Autowired
+    EventProducer eventProducer;
+
     //发布一个问题
     @PostMapping("/question/add")
     @ResponseBody
@@ -50,7 +57,16 @@ public class QuestionController {
             if(null == loginUser.getUser()){
                 return JsonUtil.getJsonString("未登录用户发布问题",unLoginCode);
             }
-            if(questionServiceImpl.addQuestion(content,title) > 0){
+            Question question = new Question();
+            question.setUserId(loginUser.getUser().getId());
+            question.setContent(content);
+            question.setCreatedDate(new Date());
+            question.setTitle(title);
+            if(questionServiceImpl.addQuestion(question) > 0){
+                //添加一个异步事件 索引上这个问题
+                eventProducer.fireEvent(new EventModel((EventType.ADD_QUESTION)).
+                        setActorId(loginUser.getUser().getId()).setEntityId(question.getId())
+                        .setExts("title",question.getTitle()).setExts("content",question.getContent()));
                 return JsonUtil.getJsonString(0);
             }
         } catch (Exception e) {
