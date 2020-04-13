@@ -228,3 +228,39 @@ cnblogs.com/david1216/p/11479495.html
 
 添加问题时通过异步事件添加索引
 
+
+
+# 单元测试
+
+初始化数据  执行测试业务    验证  清理
+
+apache2-utils  压力测试
+
+
+
+# 打包部署
+
+1.application 继承SpringBootServletInitializer
+2.pom.xml 打包改为war
+3.mvnpackage -Dmaven.test.skip=true
+4.去除多余的main函数
+
+
+
+
+
+# 总结/面试
+
+1.开发工具Git，IntilliJ
+2.Spring Boot，Velocity
+3.myBatis
+4.登陆/注册
+5.前缀树
+6.Redis
+7.异步框架
+8.邮件，排序算法
+9.推拉timeline
+10.爬虫
+11.solr搜索
+12.单元测试/部署
+
