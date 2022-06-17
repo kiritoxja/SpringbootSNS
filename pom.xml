@@ -22,7 +22,7 @@
         <webjars-jquery.version>3.4.1</webjars-jquery.version>
         <webjars-bootstrap.version>4.3.1</webjars-bootstrap.version>
         <jwt-version>3.4.0</jwt-version>
-        <fastjson-version>1.2.62</fastjson-version>
+        <fastjson-version>1.2.83</fastjson-version>
         <commons-lang3-version>3.9</commons-lang3-version>
         <jedis-version>3.2.0</jedis-version>
     </properties>
